@@ -4,6 +4,8 @@ import { gameDatabase } from '../lib/mockAdapters'
 import ProviderPanel from './settings/ProviderPanel'
 import ControlCenter from './settings/ControlCenter'
 import IntegrationsPanel from './settings/IntegrationsPanel'
+import AccountPanel from './account/AccountPanel'
+import AdminConsole from './admin/AdminConsole'
 
 function Card({ title, children, action }: { title: string; children: React.ReactNode; action?: React.ReactNode }) {
   return (
@@ -25,6 +27,12 @@ export default function Dashboard({ section }: { section: string }) {
   useEffect(()=> setTitleDraft(streamMeta.title), [streamMeta.title])
   const showToast = (m:string)=>{ setToast(m); setTimeout(()=>setToast(null), 2500)}
 
+  if (section==='account') {
+    return <div className="p-6 max-w-[1100px] mx-auto w-full"><AccountPanel /></div>
+  }
+  if (section==='admin') {
+    return <div className="p-6 max-w-[1100px] mx-auto w-full"><AdminConsole /></div>
+  }
   if (section==='live') {
     return (
       <div className="p-6 space-y-4 max-w-[1200px] mx-auto w-full">

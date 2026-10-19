@@ -43,10 +43,43 @@
       }
     ],
     "security": {
-      "csp": null,
+      "csp": "default-src 'self'; connect-src 'self' https://jldyaqxxdiznhkeuerzl.supabase.co https://*.supabase.co https://api.stripe.com https://checkout.stripe.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; font-src 'self' data:",
       "capabilities": [
-        { "identifier": "notch-capability", "description": "Notch overlay capabilities", "windows": ["notch"], "permissions": ["core:window:allow-show", "core:window:allow-hide", "core:window:allow-set-focus", "core:window:allow-set-position", "core:window:allow-set-size", "core:window:allow-set-always-on-top"] },
-        { "identifier": "main-capability", "description": "Default", "windows": ["dashboard"], "permissions": ["core:default", "sql:default", "sql:allow-execute", "sql:allow-select", "notification:default", "notification:allow-notify", "global-shortcut:default", "autostart:default", "autostart:allow-enable", "autostart:allow-disable", "autostart:allow-is-enabled"] }
+        {
+          "identifier": "notch-capability",
+          "description": "Notch overlay capabilities",
+          "windows": [
+            "notch"
+          ],
+          "permissions": [
+            "core:window:allow-show",
+            "core:window:allow-hide",
+            "core:window:allow-set-focus",
+            "core:window:allow-set-position",
+            "core:window:allow-set-size",
+            "core:window:allow-set-always-on-top"
+          ]
+        },
+        {
+          "identifier": "main-capability",
+          "description": "Default",
+          "windows": [
+            "dashboard"
+          ],
+          "permissions": [
+            "core:default",
+            "sql:default",
+            "sql:allow-execute",
+            "sql:allow-select",
+            "notification:default",
+            "notification:allow-notify",
+            "global-shortcut:default",
+            "autostart:default",
+            "autostart:allow-enable",
+            "autostart:allow-disable",
+            "autostart:allow-is-enabled"
+          ]
+        }
       ]
     },
     "trayIcon": {
@@ -59,7 +92,10 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": ["icons/icon.png", "icons/icon.ico"],
+    "icon": [
+      "icons/icon.png",
+      "icons/icon.ico"
+    ],
     "windows": {
       "certificateThumbprint": null,
       "digestAlgorithm": "sha256",
@@ -68,15 +104,23 @@
         "installMode": "perMachine"
       },
       "wix": {
-        "language": { "default": "en-US" }
+        "language": {
+          "default": "en-US"
+        }
       }
     },
     "publisher": "Zeyvo Team",
     "category": "Productivity"
   },
   "plugins": {
-    "autostart": { "macosLaunchAgent": false },
+    "autostart": {
+      "macosLaunchAgent": false
+    },
     "globalShortcut": {},
-    "sql": { "preload": ["sqlite:zeyvo.db"] }
+    "sql": {
+      "preload": [
+        "sqlite:zeyvo.db"
+      ]
+    }
   }
 }

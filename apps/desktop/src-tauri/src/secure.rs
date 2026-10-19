@@ -26,6 +26,25 @@ pub fn secure_delete(key: String) -> Result<(), String> {
 
 #[tauri::command]
 pub fn secure_list() -> Result<Vec<String>, String> {
-    // keyring doesn't list — return empty, frontend caches
     Ok(vec![])
+}
+
+// --- SaaS auth: persist Supabase session securely (Windows Credential Manager, not plaintext) ---
+#[tauri::command]
+pub fn store_session(access_token: String, refresh_token: String) -> Result<(), String> {
+    Entry::new("zeyvo","supabase_access_token").map_err(|e| e.to_string())?.set_password(&access_token).map_err(|e| e.to_string())?;
+    Entry::new("zeyvo","supabase_refresh_token").map_err(|e| e.to_string())?.set_password(&refresh_token).map_err(|e| e.to_string())?;
+    Ok(())
+}
+#[tauri::command]
+pub fn load_session() -> Result<(String,String), String> {
+    let at = Entry::new("zeyvo","supabase_access_token").map_err(|e| e.to_string())?.get_password().map_err(|e| e.to_string())?;
+    let rt = Entry::new("zeyvo","supabase_refresh_token").map_err(|e| e.to_string())?.get_password().map_err(|e| e.to_string())?;
+    Ok((at,rt))
+}
+#[tauri::command]
+pub fn clear_session() -> Result<(), String> {
+    let _ = Entry::new("zeyvo","supabase_access_token").map_err(|e| e.to_string())?.delete_credential();
+    let _ = Entry::new("zeyvo","supabase_refresh_token").map_err(|e| e.to_string())?.delete_credential();
+    Ok(())
 }

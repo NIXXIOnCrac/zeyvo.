@@ -62,6 +62,10 @@ fn main() {
             secure::secure_get,
             secure::secure_delete,
             secure::secure_list,
+            secure::store_session,
+            secure::load_session,
+            secure::clear_session,
+            commands::billing_open_url,
             db::db_execute,
             db::db_select,
         ])

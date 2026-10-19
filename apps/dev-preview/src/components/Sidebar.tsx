@@ -1,5 +1,6 @@
 const items = [
   { id: 'home', label: 'Home', icon: '◧' },
+  { id: 'account', label: 'Account & Billing', icon: '👤' },
   { id: 'live', label: 'Live Studio', icon: '●', badge: 'LIVE' },
   { id: 'workflow', label: 'Workflow Studio', icon: '◇' },
   { id: 'agents', label: 'Agents', icon: '◆' },
@@ -8,6 +9,7 @@ const items = [
   { id: 'control', label: 'Control Center', icon: '🛡️' },
   { id: 'providers', label: 'AI Providers', icon: '🧠' },
   { id: 'integrations', label: 'Integrations', icon: '⬢' },
+  { id: 'admin', label: 'Admin Console', icon: '🔒' },
   { id: 'settings', label: 'Settings', icon: '⚙' },
 ]
 
@@ -36,11 +38,11 @@ export default function Sidebar({ active, onChange }: { active: string; onChange
       </div>
       <div className="p-3 border-t border-white/5">
         <div className="rounded-xl bg-white/[0.04] border border-white/5 p-3">
-          <div className="text-[12px] font-medium text-white">Background runtime</div>
-          <div className="text-[11px] text-white/50 leading-snug mt-1">Zeyvo stays in tray. Notch hides after 10s idle (interaction-only). Global: Ctrl+Alt+Z</div>
+          <div className="text-[12px] font-medium text-white">Managed AI</div>
+          <div className="text-[11px] text-white/50 leading-snug mt-1">No API keys — sign in & subscribe. Backend enforces quotas securely.</div>
           <div className="flex items-center gap-1.5 mt-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span className="text-[11px] text-white/60">Tray • Notch • Hotkeys • Breathing</span>
+            <span className="text-[11px] text-white/60">Cloud gateway • Stripe • RLS</span>
           </div>
         </div>
       </div>

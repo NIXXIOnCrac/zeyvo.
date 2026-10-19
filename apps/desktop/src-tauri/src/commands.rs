@@ -44,7 +44,13 @@ pub async fn voice_insert_text(_text: String) -> Result<(), String> {
 
 #[tauri::command]
 pub async fn oauth_start(_provider: String, _authUrl: String, _redirectUri: String) -> Result<(), String> {
-    // Opens system browser via shell plugin, handles PKCE callback via local loopback
+    Ok(())
+}
+
+// SaaS billing — open Stripe hosted checkout or portal in system browser
+#[tauri::command]
+pub async fn billing_open_url(url: String) -> Result<(), String> {
+    open::that(&url).map_err(|e| e.to_string())?;
     Ok(())
 }
 

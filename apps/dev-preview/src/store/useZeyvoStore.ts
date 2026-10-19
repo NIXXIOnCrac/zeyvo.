@@ -7,6 +7,7 @@ import { visionEngine } from '../lib/vision/engine'
 import { automationEngine } from '../lib/automation/engine'
 import { obsAdapter } from '../lib/obs/adapter'
 import { workflowRuntime } from '../lib/workflowRuntime/runtime'
+import { callManagedGateway } from '../lib/providers/managedGateway'
 
 const defaultSettings: AppSettings = {
   appearance: {
@@ -231,18 +232,43 @@ export const useZeyvoStore = create<ZeyvoState>((set, get) => ({
     if (get().notchState==='idle' || get().notchState==='collapsed') get().dispatch({ type:'EXPAND' })
     get().dispatch({ type:'THINKING' })
     try {
-      // Stream via provider router
+      // Managed AI Gateway (preferred) — falls back to BYOK providerRouter for dev
       let full=''
       const sysPrompt = `You are Zeyvo, a helpful Windows AI companion. Keep answers concise (under 120 words unless asked). You help with desktop, streaming, workflows. Today is ${new Date().toDateString()}. User loves: ${get().creatorStyle.examples.join(', ')}.`
-      await providerRouter.chat({
-        messages: [
-          { role:'system', content: sysPrompt },
-          ...nextMsgs.slice(-10).map(m=>({ role:m.role, content:m.content } as const))
-        ]
-      }, (chunk)=>{
-        full += chunk.delta
-        if (!chunk.done) set(s=>({ notchContext: { ...s.notchContext, responseText: full }}))
-      })
+      const useManaged = !!localStorage.getItem('supabase.auth.token') || !!localStorage.getItem('zeyvo-auth') || !!localStorage.getItem('zeyvo-entitlement') || (()=>{ try{ const s=localStorage.getItem('sb-jldyaqxxdiznhkeuerzl-auth-token'); return !!s }catch{return false}})()
+      // Try managed gateway first if signed in, else BYOK
+      let usedManaged = false
+      try {
+        const hasSession = await import('../lib/supabase/client').then(m=>m.supabase.auth.getSession()).then(r=>!!r.data.session)
+        if (hasSession) {
+          await callManagedGateway({
+            feature: 'fast_assistant',
+            messages: [
+              { role:'system', content: sysPrompt },
+              ...nextMsgs.slice(-10).map(m=>({ role:m.role as any, content:m.content }))
+            ],
+            stream: true
+          }, (delta)=>{ full+=delta; set(s=>({ notchContext: { ...s.notchContext, responseText: full }})) })
+          usedManaged = true
+        }
+      } catch (gatewayErr) {
+        // If gateway fails with AWAITING_CONFIGURATION or SUBSCRIPTION_EXPIRED, surface that — don't silently fallback to fake
+        if ((gatewayErr as Error).message.includes('Subscription required') || (gatewayErr as Error).message.includes('Quota exceeded') || (gatewayErr as Error).message.includes('AI gateway awaiting')) {
+          throw gatewayErr
+        }
+        // Otherwise fallback to BYOK (dev convenience)
+      }
+      if (!usedManaged) {
+        await providerRouter.chat({
+          messages: [
+            { role:'system', content: sysPrompt },
+            ...nextMsgs.slice(-10).map(m=>({ role:m.role, content:m.content } as const))
+          ]
+        }, (chunk)=>{
+          full += chunk.delta
+          if (!chunk.done) set(s=>({ notchContext: { ...s.notchContext, responseText: full }}))
+        })
+      }
       const assistantMsg = { role:'assistant' as const, content: full || '[No response — check provider config]', ts:Date.now() }
       const finalMsgs = [...nextMsgs, assistantMsg]
       set({ messages: finalMsgs, notchContext: { ...get().notchContext, responseText: full } })
