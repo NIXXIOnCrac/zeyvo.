@@ -1,0 +1,17 @@
+{
+  "name": "zeyvo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/dev-preview",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/dev-preview",
+    "build": "npm run build --workspace=apps/dev-preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  }
+}

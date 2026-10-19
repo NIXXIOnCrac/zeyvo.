@@ -1,0 +1,5 @@
+[package]
+name = "zeyvo-windows-host"
+version = "0.1.0"
+edition = "2021"
+description = "Windows host integrations: Win32, UI Automation, Graphics Capture"

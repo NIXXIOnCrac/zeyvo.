@@ -1,0 +1,2 @@
+# AGENT_ENGINE
+Intent Router → Context Manager → Planner → Tool Registry (typed, per-tool permissions) → Executor → Verifier → Task Manager (queued/running/paused/completed) → Memory → Logger. Roles: General, Desktop Operator, Stream Director, Workflow Builder, Research, Coding, Content, Diagnostics. Subagents when available, no recursive loops. Codex adapter via CLI/SDK (no invented APIs). MCP: registration, discovery, monitoring, per-tool perms.

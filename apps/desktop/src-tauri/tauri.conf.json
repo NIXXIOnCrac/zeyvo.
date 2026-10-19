@@ -1,0 +1,82 @@
+{
+  "productName": "Zeyvo",
+  "version": "0.1.0-alpha",
+  "identifier": "com.zeyvo.desktop",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "notch",
+        "title": "Zeyvo Notch",
+        "url": "/",
+        "width": 560,
+        "height": 600,
+        "x": 680,
+        "y": 0,
+        "transparent": true,
+        "decorations": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "resizable": false,
+        "visible": true,
+        "shadow": false,
+        "acceptFirstMouse": true
+      },
+      {
+        "label": "dashboard",
+        "title": "Zeyvo Dashboard",
+        "url": "/dashboard",
+        "width": 1280,
+        "height": 800,
+        "transparent": false,
+        "decorations": true,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "resizable": true,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": null,
+      "capabilities": [
+        { "identifier": "notch-capability", "description": "Notch overlay capabilities", "windows": ["notch"], "permissions": ["core:window:allow-show", "core:window:allow-hide", "core:window:allow-set-focus", "core:window:allow-set-position", "core:window:allow-set-size", "core:window:allow-set-always-on-top"] },
+        { "identifier": "main-capability", "description": "Default", "windows": ["dashboard"], "permissions": ["core:default", "sql:default", "sql:allow-execute", "sql:allow-select", "notification:default", "notification:allow-notify", "global-shortcut:default", "autostart:default", "autostart:allow-enable", "autostart:allow-disable", "autostart:allow-is-enabled"] }
+      ]
+    },
+    "trayIcon": {
+      "id": "main",
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": false,
+      "menuOnLeftClick": false
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": ["icons/icon.png", "icons/icon.ico"],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "nsis": {
+        "displayLanguageSelector": false,
+        "installMode": "perMachine"
+      },
+      "wix": {
+        "language": { "default": "en-US" }
+      }
+    },
+    "publisher": "Zeyvo Team",
+    "category": "Productivity"
+  },
+  "plugins": {
+    "autostart": { "macosLaunchAgent": false },
+    "globalShortcut": {},
+    "sql": { "preload": ["sqlite:zeyvo.db"] }
+  }
+}

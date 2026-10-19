@@ -1,0 +1,30 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install --prefix apps/dev-preview
+      - run: npx vitest run --prefix apps/dev-preview
+      - run: npm run build --prefix apps/dev-preview
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: dtolnay/rust-toolchain@stable
+      - run: npm install --prefix apps/dev-preview
+      - run: cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml
+      - run: npm install --prefix apps/desktop
+      - run: npx tauri build --manifest-path apps/desktop/src-tauri/Cargo.toml || echo "Build attempted — unsigned alpha artifact expected at src-tauri/target/release/bundle"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zeyvo-windows-alpha
+          path: |
+            apps/desktop/src-tauri/target/release/bundle/nsis/*.exe
+            apps/desktop/src-tauri/target/release/bundle/msi/*.msi

@@ -1,0 +1,2 @@
+# VOICE_ENGINE
+Adapters: local STT, cloud STT, ElevenLabs TTS, local fallback. Modes: dictation (punctuation, custom vocab, filler removal), text editing (“make shorter”), conversation, agent mode, stream mode, teach mode. Activation: push-to-talk, global shortcut, optional local wake-word (“Hey Zeyvo” configurable), hands-free toggle (opt-in, not default), VAD, interruptible, mute. Audio device selection, consent on first use.
